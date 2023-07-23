@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-👋 Welcome to my website! I'm thrilled to have you here. My name is Damiano, and I am a (People) data scientist with a strong background in statistics and methodology. My passion for understanding the intricacies of human behavior and its meaningful interpretation led me on an exciting academic journey that culminated in a Doctorate in Statistics and Methodology from Tilburg University.
+Welcome to my website! I'm thrilled to have you here. My name is Damiano, and I am a (People) data scientist with a strong background in statistics and methodology. My passion for understanding the intricacies of human behavior and its meaningful interpretation led me on an exciting academic journey that culminated in a Doctorate in Statistics and Methodology from Tilburg University.
 
 Throughout my doctoral research, I delved deep into the fascinating realm of psychometric approaches. I dedicated my efforts to developing and assessing solutions that address the inherent challenges of test and agreeing bias, ultimately aiming to enhance the validity and reliability of psychological measurements. This enriching experience honed my skills in statistical analysis and equipped me with the tools to decipher complex data patterns.
 
