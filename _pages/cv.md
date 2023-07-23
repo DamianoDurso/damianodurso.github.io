@@ -9,7 +9,7 @@ redirect_from:
 
 {% include base_path %}
 
-# Work experience
+# Work experience 
 * People Data Scientist, Rabobank, Netherlands, 2022 - present
 
 # Education and Academic Experience
