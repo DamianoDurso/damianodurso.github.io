@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "academicpages is a ready-to-fork GitHub Pages template for academic personal websites"
+title: Hi
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,12 +8,19 @@ redirect_from:
   - /about.html
 ---
 
-This is the front page of a website that is powered by the [academicpages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the respository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this repository](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads! An older version of this template powers my own personal website at [stuartgeiger.com](http://stuartgeiger.com), which uses [this Github repository](https://github.com/staeiou/staeiou.github.io).
+👋 Welcome to my website! I'm thrilled to have you here. My name is Damiano, and I am a (People) data scientist with a strong background in statistics and methodology. My passion for understanding the intricacies of human behavior and its meaningful interpretation led me on an exciting academic journey that culminated in a Doctorate in Statistics and Methodology from Tilburg University.
 
-A data-driven personal website
-======
-Like many other Jekyll-based GitHub Pages templates, academicpages makes you separate the website's content from its form. The content & metadata of your website are in structured markdown files, while various other files constitute the theme, specifying how to transform that content & metadata into HTML pages. You keep these various markdown (.md), YAML (.yml), HTML, and CSS files in a public GitHub repository. Each time you commit and push an update to the repository, the [GitHub pages](https://pages.github.com/) service creates static HTML pages based on these files, which are hosted on GitHub's servers free of charge.
+Throughout my doctoral research, I delved deep into the fascinating realm of psychometric approaches. I dedicated my efforts to developing and assessing solutions that address the inherent challenges of test and agreeing bias, ultimately aiming to enhance the validity and reliability of psychological measurements. This enriching experience honed my skills in statistical analysis and equipped me with the tools to decipher complex data patterns.
 
+Having successfully completed my PhD, I transitioned into the dynamic world of data science. As a data scientist, I thrive on turning raw data into actionable insights and uncovering hidden trends that drive decision-making and problem-solving. My expertise extends to various programming languages, including Python and R, enabling me to leverage their power to analyze data effectively and efficiently.
+
+On this website, I aim to share my knowledge, experiences, and discoveries in the field of data science, statistics, and psychometric approaches. Whether you're an aspiring data scientist, a researcher, or a data enthusiast, my goal is to provide you with valuable resources, practical tips, and captivating insights that will elevate your understanding of data analytics.
+
+As we embark on this data-driven adventure together, I hope to inspire you to harness the potential of data for meaningful solutions and innovation. So, let's explore the endless possibilities of data science and statistical methodologies, and together, let's unlock the true power of information.
+
+Let's make every data point count!
+
+=====
 Many of the features of dynamic content management systems (like Wordpress) can be achieved in this fashion, using a fraction of the computational resources and with far less vulnerability to hacking and DDoSing. You can also modify the theme to your heart's content without touching the content of your site. If you get to a point where you've broken something in Jekyll/HTML/CSS beyond repair, your markdown files describing your talks, publications, etc. are safe. You can rollback the changes or even delete the repository and start over -- just be sure to save the markdown files! Finally, you can also write scripts that process the structured data on the site, such as [this one](https://github.com/academicpages/academicpages.github.io/blob/master/talkmap.ipynb) that analyzes metadata in pages about talks to display [a map of every location you've given a talk](https://academicpages.github.io/talkmap.html).
 
 Getting started
