@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: 👋 
+title: 👋 Hi
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,13 +8,9 @@ redirect_from:
   - /about.html
 ---
 
-Welcome to my website! I'm thrilled to have you here. My name is Damiano, and I am a (People) data scientist with a strong background in statistics and methodology. My passion for understanding the intricacies of human behavior and its meaningful interpretation led me on an exciting academic journey that culminated in a Doctorate in Statistics and Methodology from Tilburg University.
+Welcome to my website! I'm thrilled to have you here. My name is Damiano, and I am a (People) data scientist with a strong background in psychometrics, statistics and methodology. 
 
-Throughout my doctoral research, I delved deep into the fascinating realm of psychometric approaches. I dedicated my efforts to developing and assessing solutions that address the inherent challenges of test and agreeing bias, ultimately aiming to enhance the validity and reliability of psychological measurements. This enriching experience honed my skills in statistical analysis and equipped me with the tools to decipher complex data patterns.
-
-Having successfully completed my PhD, I transitioned into the dynamic world of data science. As a data scientist, I thrive on turning raw data into actionable insights and uncovering hidden trends that drive decision-making and problem-solving. My expertise extends to various programming languages, including Python and R, enabling me to leverage their power to analyze data effectively and efficiently.
-
-On this website, I aim to share my knowledge, experiences, and discoveries in the field of data science, statistics, and psychometric approaches. Whether you're an aspiring data scientist, a researcher, or a data enthusiast, my goal is to provide you with valuable resources, practical tips, and captivating insights that will elevate your understanding of data analytics.
+On this website, I aim to share my knowledge, experiences, and discoveries in the field of data science, statistics, and psychometrics. Whether you're an aspiring data scientist, a researcher, or a data enthusiast, my goal is to provide you with valuable resources, practical tips, and captivating insights that will elevate your understanding of data analytics.
 
 As we embark on this data-driven adventure together, I hope to inspire you to harness the potential of data for meaningful solutions and innovation. So, let's explore the endless possibilities of data science and statistical methodologies, and together, let's unlock the true power of information.
 
