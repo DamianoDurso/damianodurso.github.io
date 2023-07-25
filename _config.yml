@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Damiano D'Urso / Data Scientist"
+title                    : "Damiano D'Urso, Ph.D./ Data Scientist"
 title_separator          : "-"
 name                     : &name "Damiano D'Urso"
 description              : &description "personal description"
