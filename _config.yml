@@ -101,14 +101,14 @@ author:
   instagram        :
   impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         :
+  linkedin         : "https://www.linkedin.com/in/damiano-d-urso-phd-8b042b159/"
   orcid            : "https://orcid.org/0000-0002-2212-5440"
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
   steam            :
   tumblr           :
-  twitter          : "replacethistwitterhandle"
+#  twitter          : "replacethistwitterhandle"
   vine             :
   weibo            :
   xing             :
