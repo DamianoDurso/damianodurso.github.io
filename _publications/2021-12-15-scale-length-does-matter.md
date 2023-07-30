@@ -1,7 +1,7 @@
 ---
 title: "Scale Length Does Matter: Recommendations for measurement invariance testing with categorical factor analysis and item response theory approaches"
 collection: publications
-permalink: /publication/2009-10-01-paper-title-number-1
+permalink: /publication/2021-12-15-scale-length-does-matter
 excerpt: 'This paper is about comparing methods for assessing measurement invariance for Likert-type data.'
 date: 2021-12-15
 venue: 'Behavior Research Methods'
