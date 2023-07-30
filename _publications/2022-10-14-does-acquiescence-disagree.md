@@ -2,7 +2,7 @@
 title: "Does Acquiescence Disagree with Measurement Invariance Testing?"
 collection: publications
 permalink: /publication/2022-10-14-does-acquiescence-disagree
-excerpt: 'This paper is disregarding acquiescence and its consequences on measurement invariance testing'
+excerpt: 'This paper is disregarding acquiescence and its consequences on measurement invariance testing' 
 date: 2022-10-14
 venue: 'PsyArxiv'
 paperurl: 'https://psyarxiv.com/gj56d/'
