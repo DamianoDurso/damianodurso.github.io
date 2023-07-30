@@ -12,4 +12,4 @@ citation: 'D’Urso, E., Maassen, E., van Assen, M. A. L. M., Nuijten, M. B., De
 
 [Download paper here](https://psyarxiv.com/n3f5u/)
 
-D'Urso, E., Maassen, E., van Assen, M. A. L. M., Nuijten, M. B., De Roover, K., & Wicherts, J. M. (2022, July 26). The Dire Disregard of Measurement Invariance Testing in Psychological Science. https://doi.org/10.31234/osf.io/n3f5u
+D’Urso, E., Maassen, E., van Assen, M. A. L. M., Nuijten, M. B., De Roover, K., & Wicherts, J. M. (2022, July 26). The Dire Disregard of Measurement Invariance Testing in Psychological Science. https://doi.org/10.31234/osf.io/n3f5u
