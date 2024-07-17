@@ -15,3 +15,4 @@ On this website, I aim to share my knowledge, experiences, and discoveries in th
 As we embark on this data-driven adventure together, I hope to inspire you to harness the potential of data for meaningful solutions and innovation. So, let's explore the endless possibilities of data science and statistical methodologies, and together, let's unlock the true power of information.
 
 Let's make every data point count!
+TEST
