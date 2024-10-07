@@ -1,4 +1,4 @@
-# The Modern Workhorse for People Analytics: Leveraging Language Models for Better Surveys
+# The Modern Workhorse of Employee Listening: Leveraging Language Models for Better Surveys
 
 **How often do you rely on surveys to measure employee engagement, customer satisfaction, or candidate fit?** In people analytics, these tools are indispensable. They help organizations gather insights and make informed decisions. However, building reliable surveys is complex and resource-intensive. Many fall back on poor measures due to the high cost, risk, and time involved.
 
