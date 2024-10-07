@@ -1,4 +1,4 @@
-# Select the best questions for an employee survey with LLMs and no data
+# Select the best questions for an employee survey with LLMs
 
 **How often do you rely on surveys to measure employee engagement, customer satisfaction, or candidate fit?** In people analytics, these tools are indispensable. They help organizations gather insights and make informed decisions. However, building reliable surveys is complex and resource-intensive. Many fall back on poor measures due to the high cost, risk, and time involved.
 
@@ -134,7 +134,7 @@ for question, similarity in top_questions_bert:
     Question: Are there rewards for outstanding performance in your workplace? | Similarity: 0.7391
 
 
-As we can see the only difference between SBERT and BERT is the second questions. **SBERT picks something that may resonate more with how people actually experience and value recognition in the workplace**. That is, rather than focusing on the existence of recognition structures, SBERT picks a question that is more likely to evoke feelings of appreciation and personal acknowledgment, **which seems to be supported by some [recent research](https://psycnet.apa.org/record/2008-05872-010)**. In any case, this is just a toy example, so you could probably find compelling arguments as well for having recognition systems in place.
+As we can see the only difference between SBERT and BERT is the second question. **SBERT picks something that may resonate more with how people actually experience and value recognition in the workplace**. That is, rather than focusing on the existence of recognition structures, SBERT picks a question that is more likely to evoke feelings of appreciation and personal acknowledgment, **which seems to be supported by some [recent research](https://psycnet.apa.org/record/2008-05872-010)**. This is just a toy example, so you could probably find compelling arguments as well for having recognition systems in place.
 
 ## Conclusion: Unlocking Survey Insights with LLMEP in People Analytics
 
