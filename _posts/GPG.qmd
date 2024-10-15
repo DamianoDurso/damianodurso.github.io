@@ -1,0 +1,102 @@
+---
+title: "Gender Pay Gap Methods"
+format: html
+execute: 
+  warning: false
+  message: true
+  echo: true
+#context: setup
+
+---
+
+## General background
+- Gender Pay Gap calculation is a crucial requirements for most companies, given new laws.
+
+## What is commonly reported
+- Normally companies are interested in reporting:
+    - Unadjusted GPG
+    - Adjusted GPG
+
+There is consensus around UGPG but not around AGPG
+
+## Issues with modeling adjusted gender pay gap
+- Comparability (what goes in the model)
+- Modeling (what methodologies)
+- Reporting (estimates vs uncertainties)
+
+## Methodologies described
+- Oaxaca Blinder
+- IPW
+- Matching
+
+
+#First do some basic descriptives
+#then, introduce the standard approach
+#then, introduce the issue of matching by ipw
+#finally, introduce matching by matching options and marginal effects
+
+```{r}
+df = read.csv("Glassdoor Gender Pay Gap.csv")
+head(df)
+```
+
+# Data Exploration
+Next we are just going to look at some basic descriptives for some of the variables by gender. 
+
+```{r, echo = FALSE}
+#| fig-width: 12
+#| fig-height: 10
+# Load necessary libraries
+library(psych)
+library(GGally)
+library(oaxaca)
+
+
+# Remove any rows with missing data
+df_clean <- na.omit(df)
+
+# Generate the ggpairs plot with boxplots and correlations
+pm <- ggpairs(
+  df_clean[, c(3,4,7,5)], # Include the desired columns
+  mapping = aes(colour = as.factor(df_clean$Gender)), # Specify the color mapping here
+  title = "Plots and Correlations for GlassDoor Data by Male and Female" # Optional: Add title
+  )
+
+
+# Display the plot
+print(pm)
+
+```
+
+What we can observe is that there seems to be some difference in terms of Age, performance evaluation, seniority and education.
+
+# Unadjusted Pay Gap
+
+The first step in analyzing the GPG would be the average difference in pay between man and women, also called the Unadjusted Gender Pay gap.
+In our case we will be following the EU directive on this metric https://ec.europa.eu/eurostat/cache/metadata/en/earn_grgpg2_esms.htm#:~:text=according%20to%20the%20following%20definition,paid%20employees%5D%20expressed%20in%20%25.
+which is GPG = [(average gross hourly earnings of male paid employees - average gross hourly earnings of female paid employees) / average gross hourly earnings of male paid employees] expressed in %
+
+```{r}
+avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
+avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
+GPG = round(((avg_pay_men-avg_pay_women)/avg_pay_men)*100,2)
+
+paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
+
+```
+
+The resulting gender pay gap is 8.65%, indicating that women, on average, earn 8.65% less than men. 
+
+# Adjusted GPG
+## Oaxaca Blinder
+```{r}
+library(oaxaca)
+library(psych)
+df_clean$BasePay_log = log(df_clean$BasePay)
+df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
+oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept | Gender_fac, data = df_clean)
+
+AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
+
+paste0("The Adjusted Gender Pay Gap is = ", AGPG, "%")
+```
