@@ -81,11 +81,11 @@ avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
 avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
 GPG = round(((avg_pay_men-avg_pay_women)/avg_pay_men)*100,2)
 
-paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
+paste0("The Unadjusted Gender Pay Gap is = ", -1*GPG, "%")
 
 ```
 
-The resulting gender pay gap is 8.65%, indicating that women, on average, earn 8.65% less than men. 
+The resulting gender pay gap is -8.65%, indicating that women, on average, earn 8.65% less than men. 
 
 # Adjusted GPG
 ## Oaxaca Blinder
@@ -94,9 +94,69 @@ library(oaxaca)
 library(psych)
 df_clean$BasePay_log = log(df_clean$BasePay)
 df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
-oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept | Gender_fac, data = df_clean)
+oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac, data = df_clean)
 
 AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
 
-paste0("The Adjusted Gender Pay Gap is = ", AGPG, "%")
+paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
+```
+
+## IPW
+Limitation Oaxaca https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g
+```{r}
+formula_ipw = 'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'
+
+weights_ipw = glm(formula_ipw,
+                    family = binomial(link = 'probit'),
+                    data = df_clean)    
+#calculate ipw weights
+ipw_w = predict(weights_ipw, df_clean, type ='response')
+outcome = df_clean$Gender_fac
+df_clean$ipw_wts = (outcome/ipw_w) + ((1-outcome)/ (1-ipw_w)) 
+
+# fit with ipw weights
+formula_lm = 'BasePay_log ~ Gender_fac'
+
+mod = lm(formula_lm, data = df_clean, weights= ipw_wts)
+
+library(marginaleffects)
+
+comp = avg_comparisons(mod, 
+                       variables = 'Gender_fac', 
+                       vcov =~subclass, 
+                       newdata = subset(df_clean, Gender_fac ==1), 
+                       wts = 'ipw_wts')
+AGPG_ipw = round((exp(comp['estimate'])-1)*100,2)
+
+paste0("The AGPG estimated by IPW is = ", AGPG_ipw, "%")
+```
+
+## Matching 
+
+```{r}
+library(MatchIt)
+
+match = matchit(as.formula(formula_ipw), method = 'cem', data = df_clean)
+
+# Checking balance after cem matching
+summary(match, un = FALSE)
+```
+
+```{r}
+df_out = match.data(match)
+
+
+# fit with ipw weights
+formula_lm = 'BasePay_log ~ Gender_fac'
+
+mod = lm(formula_lm, data = df_out, weights= weights)
+
+comp = avg_comparisons(mod, 
+                       variables = 'Gender_fac', 
+                       vcov =~subclass, 
+                       newdata = subset(df_out, Gender_fac ==1), 
+                       wts = 'weights')
+AGPG_match = round((exp(comp['estimate'])-1)*100,2)
+
+paste0("The AGPG estimated by cem matching is = ", AGPG_match, "%")
 ```
