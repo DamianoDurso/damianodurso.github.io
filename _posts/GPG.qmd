@@ -9,39 +9,39 @@ execute:
 
 ---
 
-## General background
-- Gender Pay Gap calculation is a crucial requirements for most companies, given new laws.
+# Background: The Push for Pay Transparency
+In today’s workplace, Diversity, Equity, and Inclusion (**DEI**) go beyond just policies; they’re about **ensuring everyone is treated and compensated fairly, regardless of gender, race, or any other protected characteristic**. One area gaining a lot of attention is the gender pay gap (GPG), which shows differences in average pay between men and women. **With recent directives like the upcoming EU pay transparency regulation, companies are increasingly required to report pay data**, making GPG a critical topic for HR teams.
 
-## What is commonly reported
-- Normally companies are interested in reporting:
-    - Unadjusted GPG
-    - Adjusted GPG
+More companies are now reporting their GPG numbers, and with these new laws, most will soon be required to make these numbers public. Traditionally, this analysis might have been handled by finance teams, but as People Analytics grows in HR, data experts in HR are stepping in to help ensure accurate, meaningful GPG reporting. However, **calculating and interpreting GPG can be challenging**, as it involves many factors that require careful consideration.
 
-There is consensus around UGPG but not around AGPG
-
-## Issues with modeling adjusted gender pay gap
-- Comparability (what goes in the model)
-- Modeling (what methodologies)
-- Reporting (estimates vs uncertainties)
-
-## Methodologies described
-- Oaxaca Blinder
-- IPW
-- Matching
+In this post, **we’ll cover key metrics that help HR teams assess GPG and discuss how certain analytical choices can impact the results**. Plus, I’ll share some code to make implementing these calculations straightforward for your team.
 
 
-#First do some basic descriptives
-#then, introduce the standard approach
-#then, introduce the issue of matching by ipw
-#finally, introduce matching by matching options and marginal effects
+# Key Metrics for Gender Pay Gap Reporting
+
+When it comes to gender pay gap (GPG), two main metrics are often reported: the Unadjusted and Adjusted Gender Pay Gap.
+
+- **Unadjusted Gender Pay Gap (UGPG)**: This measures the difference in average pay between all male and female employees, presented as a percentage of average male pay. UGPG is a high-level metric, reflecting overall pay differences without considering job type, experience, or role.
+- **Adjusted Gender Pay Gap (AGPG)**: This digs a bit deeper. AGPG adjusts for factors like role, experience, and other structural differences to provide a more direct comparison of pay between men and women in similar positions. It shows the difference in average pay when comparing employees in "comparable positions," expressed as a percentage of average male pay.
+
+Determining an AGPG can be tricky, though, since **deciding what qualifies as “comparable positions” and which factors should be “adjusted for” can vary between companies and contexts**. Questions like *“What defines a comparable position?”* and *“How should we adjust for structural differences?”* are crucial to get accurate and meaningful GPG results.
+
+In the following sections, I’ll **break down these metrics step-by-step and include code examples you can use to start calculating GPG metrics in your organization**.
+
+# A concrete GPG analysis example
+
+## The Data
+For this post, I will be using the [Glassdoor Gender Pay Gap data from Kaggle]('https://www.kaggle.com/datasets/nilimajauhari/glassdoor-analyze-gender-pay-gap') 
 
 ```{r}
 df = read.csv("Glassdoor Gender Pay Gap.csv")
-head(df)
+head(df) ; nrow(df)
 ```
 
+As we can see this data set contains 1000 individual records of salary, bonus, job title etc.
+
 # Data Exploration
-Next we are just going to look at some basic descriptives for some of the variables by gender. 
+Before diving into calculating the UGPG and AGPG, let's have a look at the data characteristics broken down by gender.
 
 ```{r, echo = FALSE}
 #| fig-width: 12
@@ -57,7 +57,7 @@ df_clean <- na.omit(df)
 
 # Generate the ggpairs plot with boxplots and correlations
 pm <- ggpairs(
-  df_clean[, c(3,4,7,5)], # Include the desired columns
+  df_clean[, c(8,3,4,7,5)], # Include the desired columns
   mapping = aes(colour = as.factor(df_clean$Gender)), # Specify the color mapping here
   title = "Plots and Correlations for GlassDoor Data by Male and Female" # Optional: Add title
   )
@@ -68,13 +68,17 @@ print(pm)
 
 ```
 
-What we can observe is that there seems to be some difference in terms of Age, performance evaluation, seniority and education.
+On the diagonal of this plot grid we can see the distributions for base pay age, performance, sentiority and education. On the off-grid plots, we can see the joint plots. What stands out is that there seems to be some gender differences in terms of Age, performance evaluation, seniority and education.
 
-# Unadjusted Pay Gap
+## Unadjusted Gender Pay Gap
 
 The first step in analyzing the GPG would be the average difference in pay between man and women, also called the Unadjusted Gender Pay gap.
-In our case we will be following the EU directive on this metric https://ec.europa.eu/eurostat/cache/metadata/en/earn_grgpg2_esms.htm#:~:text=according%20to%20the%20following%20definition,paid%20employees%5D%20expressed%20in%20%25.
-which is GPG = [(average gross hourly earnings of male paid employees - average gross hourly earnings of female paid employees) / average gross hourly earnings of male paid employees] expressed in %
+In our case we will be calculating this metric following the definition above which is 
+$$
+\text{UGPG} = \frac{\text{Avg. male earnings} - \text{Avg. female earnings}}{\text{Avg. male earnings}} \times 100\%
+$$
+
+
 
 ```{r}
 avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
@@ -85,20 +89,43 @@ paste0("The Unadjusted Gender Pay Gap is = ", -1*GPG, "%")
 
 ```
 
-The resulting gender pay gap is -8.65%, indicating that women, on average, earn 8.65% less than men. 
+As we can see, the UGPG seems to be -8.65% meaning that women earn, on average, 8.65% less than men. However, this metric is quite rough as it does not take into account other characteristics that may be relevant to someone's pay, such as their job title, years of experience etc. For accounting for these characteristics we will, thus, calculate the adjusted GPG.
 
 # Adjusted GPG
+
 ## Oaxaca Blinder
+A typical approach to calculate the AGPG is the Oaxaca-Blinder method. This approach is a statistical method used to decompose pay differences into explainable factors (differences in education or experience) and unexplainable factors (someone's gender).
+This method allows for a clearer understanding of how much of the pay gap can be explained by measurable differences versus systemic inequalities.
+
+Let's see how we can apply the Oaxaca-Blinder method to our dataset
 ```{r}
 library(oaxaca)
 library(psych)
+#Salary variables are often skewed so we first log transform it to make it approximately normal
 df_clean$BasePay_log = log(df_clean$BasePay)
+#Oaxaca-blinder requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1
 df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
+
 oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac, data = df_clean)
 
 AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
 
 paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
+```
+
+```{r}
+total_explained_gap = sum(oaxaca.results$twofold$variables[[1]][,2])
+total_explained_gap
+
+# Extract the explained contributions
+explained_contrib <- oaxaca.results$twofold$variables[[1]][,2]
+
+# Calculate each variable's percentage contribution
+percent_contrib <- (explained_contrib / total_explained_gap) * 100
+
+# View the results as a data frame for readability
+
+percent_contribG
 ```
 
 ## IPW
@@ -136,7 +163,10 @@ paste0("The AGPG estimated by IPW is = ", AGPG_ipw, "%")
 ```{r}
 library(MatchIt)
 
-match = matchit(as.formula(formula_ipw), method = 'cem', data = df_clean)
+match = matchit(as.formula(formula_ipw), 
+                method = 'full', 
+                data = df_clean,
+                distance = 'glm')
 
 # Checking balance after cem matching
 summary(match, un = FALSE)
@@ -144,7 +174,6 @@ summary(match, un = FALSE)
 
 ```{r}
 df_out = match.data(match)
-
 
 # fit with ipw weights
 formula_lm = 'BasePay_log ~ Gender_fac'
@@ -158,5 +187,5 @@ comp = avg_comparisons(mod,
                        wts = 'weights')
 AGPG_match = round((exp(comp['estimate'])-1)*100,2)
 
-paste0("The AGPG estimated by cem matching is = ", AGPG_match, "%")
+paste0("The AGPG estimated by full matching is = ", AGPG_match, "%")
 ```
