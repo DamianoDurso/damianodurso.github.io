@@ -125,7 +125,7 @@ percent_contrib <- (explained_contrib / total_explained_gap) * 100
 
 # View the results as a data frame for readability
 
-percent_contribG
+percent_contrib
 ```
 
 ## IPW
