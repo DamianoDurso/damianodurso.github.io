@@ -85,7 +85,7 @@ avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
 avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
 GPG = round(((avg_pay_men-avg_pay_women)/avg_pay_men)*100,2)
 
-paste0("The Unadjusted Gender Pay Gap is = ", -1*GPG, "%")
+paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
 
 ```
 
@@ -99,63 +99,89 @@ This method allows for a clearer understanding of how much of the pay gap can be
 
 Let's see how we can apply the Oaxaca-Blinder method to our dataset
 ```{r}
-library(oaxaca)
+#library(oaxaca)
 library(psych)
+library(OaxacaBlinder)
 #Salary variables are often skewed so we first log transform it to make it approximately normal
 df_clean$BasePay_log = log(df_clean$BasePay)
 #Oaxaca-blinder requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1
 df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
 
-oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac, data = df_clean)
+#oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac, data = df_clean)
 
-AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
+twofold = OaxacaBlinderDecomp(
+  formula = BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac,
+  data = df_clean,
+  type = "twofold",
+  baseline_invariant = TRUE,
+  n_bootstraps = 100
+)
+#AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
 
-paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
+#paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
+summary(twofold)
 ```
 
-```{r}
-total_explained_gap = sum(oaxaca.results$twofold$variables[[1]][,2])
-total_explained_gap
-
-# Extract the explained contributions
-explained_contrib <- oaxaca.results$twofold$variables[[1]][,2]
-
-# Calculate each variable's percentage contribution
-percent_contrib <- (explained_contrib / total_explained_gap) * 100
-
-# View the results as a data frame for readability
-
-percent_contrib
-```
+What we can see from the Oaxaca-blinder results is that the Gender pay gap amounts to 0.83%, indicating that women earn, on average, 0.83% less than men.
 
 ## IPW
-Limitation Oaxaca https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g
+An issue that is often overlooked by the Oaxaca-Blinder is that of group comparability. For instance, we coud have Male in their early thirties with a specific job function (e.g., sales associate) and seniority but not female counterparts, and vice versa. This is a common situation since female may tend to concentrate in certain occupations for which specific skills are more likely to be found, whereas male may concentrate in other occupations.
+This issue is also known as "common support" issue, which is crucially overlooked by the Oaxaca-blinder. In fact, since in the Oaxaca-blinder model there are no restrictions imposed on estimating earnings for male and female with comparable characteristics [Ñopo, 2004]('https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g'). 
+
+A procedure that allows us to account for group comparability is that of Inverse Probability Weighting Regression Adjustement (IPWRA). 
+
 ```{r}
 formula_ipw = 'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'
+
+formula_lm = 'BasePay_log ~  Age + PerfEval + Education + Seniority + Dept + JobTitle'
 
 weights_ipw = glm(formula_ipw,
                     family = binomial(link = 'probit'),
                     data = df_clean)    
-#calculate ipw weights
+# Step 1: Calculate ipw weights
 ipw_w = predict(weights_ipw, df_clean, type ='response')
 outcome = df_clean$Gender_fac
 df_clean$ipw_wts = (outcome/ipw_w) + ((1-outcome)/ (1-ipw_w)) 
 
+# Step 2: Fit Weighted Regression Models for Each Gender Group
+# Model for females
+model_female <- lm(formula_lm, data=df_clean, subset = (Gender_fac == 1), weights = ipw_wts)
+
+# Model for males
+model_male <- lm(formula_lm, data=df_clean, subset = (Gender_fac == 0), weights = ipw_wts)
+
+
+# Step 3: Calculate Average Treatment Effect (ATE)
+# Get predicted values for females and males
+df_clean$predicted_female = predict(model_female, newdata = df_clean, type = "response", subset = (female == 1))
+
+df_clean$predicted_male = predict(model_male, newdata = df_clean, type = "response", subset = (female == 0))
+
+# Step 4: Calculate the average predicted wages
+mean_predicted_female = mean(df_clean$predicted_female, na.rm = TRUE)
+mean_predicted_male = mean(df_clean$predicted_male, na.rm = TRUE)
+
+# Step 5: Calculate the Average Treatment Effect (ATE)
+ATE = exp(mean_predicted_female) - exp(mean_predicted_male)
+
+# Display the ATE as a percentage
+ATE_percentage = (ATE / exp(mean_predicted_male)) * 100
+cat("The estimated Average Treatment Effect (ATE) of being female on wage is:", round(ATE_percentage, 2), "%\n")
 # fit with ipw weights
-formula_lm = 'BasePay_log ~ Gender_fac'
+#formula_lm = 'BasePay_log ~ Gender_fac'
 
-mod = lm(formula_lm, data = df_clean, weights= ipw_wts)
+#mod = lm(formula_lm, data = df_clean, weights= ipw_wts)
 
-library(marginaleffects)
+#library(marginaleffects)
 
-comp = avg_comparisons(mod, 
-                       variables = 'Gender_fac', 
-                       vcov =~subclass, 
-                       newdata = subset(df_clean, Gender_fac ==1), 
-                       wts = 'ipw_wts')
-AGPG_ipw = round((exp(comp['estimate'])-1)*100,2)
+#comp = avg_comparisons(mod, 
+#                       variables = 'Gender_fac', 
+#                       vcov =~subclass, 
+#                       newdata = subset(df_clean, Gender_fac ==1), 
+#                       wts = 'ipw_wts')
+#AGPG_ipw = round((exp(comp['estimate'])-1)*100,2)
 
-paste0("The AGPG estimated by IPW is = ", AGPG_ipw, "%")
+#paste0("The AGPG estimated by IPW is = ", AGPG_ipw, "%")
 ```
 
 ## Matching 
@@ -175,17 +201,33 @@ summary(match, un = FALSE)
 ```{r}
 df_out = match.data(match)
 
+
+# Step 3: Estimate the Treatment Effect with Weights
+# Use the weights in the linear model
+mod_matched <- lm(BasePay_log ~  Gender_fac, data = df_out, weights = weights)
+
+# Step 4: Calculate the Average Treatment Effect
+# The coefficient on 'female' now represents the weighted estimate of the treatment effect
+summary(mod_matched)
+
+# Step 5: Convert the Effect from Log Wage to Percentage
+# Extract the coefficient for female
+female_coef <- coef(mod_matched)["Gender_fac"]
+
+ATE_percentage <- (exp(female_coef) - 1) * 100
+cat("The estimated Average Treatment Effect (ATE) of being female on wage #is:", round(ATE_percentage, 2), "%\n")
+
 # fit with ipw weights
-formula_lm = 'BasePay_log ~ Gender_fac'
+#formula_lm = 'BasePay_log ~ Gender_fac'
 
-mod = lm(formula_lm, data = df_out, weights= weights)
+#mod = lm(formula_lm, data = df_out, weights= weights)
 
-comp = avg_comparisons(mod, 
-                       variables = 'Gender_fac', 
-                       vcov =~subclass, 
-                       newdata = subset(df_out, Gender_fac ==1), 
-                       wts = 'weights')
-AGPG_match = round((exp(comp['estimate'])-1)*100,2)
+#comp = avg_comparisons(mod, 
+#                       variables = 'Gender_fac', 
+#                       vcov =~subclass, 
+#                       newdata = subset(df_out, Gender_fac ==1), 
+#                       wts = 'weights')
+#AGPG_match = round((exp(comp['estimate'])-1)*100,2)
 
-paste0("The AGPG estimated by full matching is = ", AGPG_match, "%")
+#paste0("The AGPG estimated by full matching is = ", AGPG_match, "%")
 ```
