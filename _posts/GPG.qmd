@@ -1,6 +1,9 @@
 ---
 title: "Gender Pay Gap Methods"
-format: html
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 execute: 
   warning: false
   message: true
@@ -10,9 +13,10 @@ execute:
 ---
 
 # Background: The Push for Pay Transparency
-In today’s workplace, Diversity, Equity, and Inclusion (**DEI**) go beyond just policies; they’re about **ensuring everyone is treated and compensated fairly, regardless of gender, race, or any other protected characteristic**. One area gaining a lot of attention is the gender pay gap (GPG), which shows differences in average pay between men and women. **With recent directives like the upcoming EU pay transparency regulation, companies are increasingly required to report pay data**, making GPG a critical topic for HR teams.
+In today’s workplace, Diversity, Equity, and Inclusion (**DEI**) go beyond just policies; they’re about **ensuring everyone is treated and compensated fairly, regardless of gender, race, or any other protected characteristic**. One of the key indicator of fair compensation is the gender pay gap (GPG), which aims at identifying differences in average pay between men and women. **With recent directives like the upcoming EU pay transparency regulation, companies are increasingly required to report pay data**, making GPG a critical topic for HR and analytics teams.
 
-More companies are now reporting their GPG numbers, and with these new laws, most will soon be required to make these numbers public. Traditionally, this analysis might have been handled by finance teams, but as People Analytics grows in HR, data experts in HR are stepping in to help ensure accurate, meaningful GPG reporting. However, **calculating and interpreting GPG can be challenging**, as it involves many factors that require careful consideration.
+More companies are now reporting their GPGs, and with these new laws, most will soon be publisihin their numbers in yearly reports disclosing them to the public. It is therefore paramounts that the GPG is accurately estimated to avoid reputational issues and establish credibility.
+Traditionally, this analysis might have been handled by finance teams, but as People Analytics reach grows, data experts in HR are stepping-in to GPG reporting. However, **calculating and interpreting GPG can be challenging**, as it involves many factors that require careful consideration.
 
 In this post, **we’ll cover key metrics that help HR teams assess GPG and discuss how certain analytical choices can impact the results**. Plus, I’ll share some code to make implementing these calculations straightforward for your team.
 
@@ -21,10 +25,10 @@ In this post, **we’ll cover key metrics that help HR teams assess GPG and disc
 
 When it comes to gender pay gap (GPG), two main metrics are often reported: the Unadjusted and Adjusted Gender Pay Gap.
 
-- **Unadjusted Gender Pay Gap (UGPG)**: This measures the difference in average pay between all male and female employees, presented as a percentage of average male pay. UGPG is a high-level metric, reflecting overall pay differences without considering job type, experience, or role.
-- **Adjusted Gender Pay Gap (AGPG)**: This digs a bit deeper. AGPG adjusts for factors like role, experience, and other structural differences to provide a more direct comparison of pay between men and women in similar positions. It shows the difference in average pay when comparing employees in "comparable positions," expressed as a percentage of average male pay.
+- The **Unadjusted Gender Pay Gap (UGPG)** measures the difference in average pay between all male and female employees, presented as a percentage of average male pay. UGPG is a high-level metric, reflecting overall pay differences without considering job type, experience, or role.
+- The **Adjusted Gender Pay Gap (AGPG)** digs a bit deeper. AGPG focuses on average difference in pay between men and women accounting for factors like role, experience, and other structural differences. The goal is to provide a more direct comparison of pay between men and women in similar positions. 
 
-Determining an AGPG can be tricky, though, since **deciding what qualifies as “comparable positions” and which factors should be “adjusted for” can vary between companies and contexts**. Questions like *“What defines a comparable position?”* and *“How should we adjust for structural differences?”* are crucial to get accurate and meaningful GPG results.
+Determining an AGPG can be tricky, though, since **deciding what qualifies as “comparable positions” and which factors should be “adjusted for” can vary between companies and contexts**. Questions like *“What defines a comparable position?”* and *“How should we adjust for structural differences?”* are crucial to get accurate and meaningful GPG results. Further, while the UGPG is more explicitely defined in directives (cite EU directive), there is no consensus around how to estimate the AGPG given the methodological intricacies involved in determinging it.
 
 In the following sections, I’ll **break down these metrics step-by-step and include code examples you can use to start calculating GPG metrics in your organization**.
 
@@ -68,16 +72,15 @@ print(pm)
 
 ```
 
-On the diagonal of this plot grid we can see the distributions for base pay age, performance, sentiority and education. On the off-grid plots, we can see the joint plots. What stands out is that there seems to be some gender differences in terms of Age, performance evaluation, seniority and education.
+On the diagonal of this plot grid we can see the distributions for base pay age, performance, sentiority and education. On the off-grid plots, we can see the joint plots. Gender differencs in age, performance evluation, seniority and education seem to indicate that the two groups  may not be fully comparable. However, for now we will ignore this observation, which we will address later.
 
 ## Unadjusted Gender Pay Gap
 
-The first step in analyzing the GPG would be the average difference in pay between man and women, also called the Unadjusted Gender Pay gap.
+The first step in analyzing the GPG would be calculating the average difference in pay between man and women, also called the Unadjusted Gender Pay gap.
 In our case we will be calculating this metric following the definition above which is 
 $$
 \text{UGPG} = \frac{\text{Avg. male earnings} - \text{Avg. female earnings}}{\text{Avg. male earnings}} \times 100\%
 $$
-
 
 
 ```{r}
@@ -89,9 +92,11 @@ paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
 
 ```
 
-As we can see, the UGPG seems to be -8.65% meaning that women earn, on average, 8.65% less than men. However, this metric is quite rough as it does not take into account other characteristics that may be relevant to someone's pay, such as their job title, years of experience etc. For accounting for these characteristics we will, thus, calculate the adjusted GPG.
+As we can see, the UGPG seems to be -8.65% meaning that women earn, on average, 8.65% less than men. However, this metric is quite rough as it does not take into account other characteristics that may be relevant to someone's pay, such as their job title, years of experience etc. The UGPG can be seen as a rough estimate of the GPG, and that is why more refined metrics, such as the AGPG are also reported.
 
 # Adjusted GPG
+
+The AGPG can be seen as a refined UGPG, where individual characteristics are taken into account when comparing men and women differences in salary.
 
 ## Oaxaca Blinder
 A typical approach to calculate the AGPG is the Oaxaca-Blinder method. This approach is a statistical method used to decompose pay differences into explainable factors (differences in education or experience) and unexplainable factors (someone's gender).
@@ -114,120 +119,138 @@ twofold = OaxacaBlinderDecomp(
   data = df_clean,
   type = "twofold",
   baseline_invariant = TRUE,
-  n_bootstraps = 100
+  n_bootstraps = 100 #internal bootstrapping for explained and unexplained coefficients
 )
 #AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
 
 #paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
 summary(twofold)
+twofold$gaps
 ```
 
 What we can see from the Oaxaca-blinder results is that the Gender pay gap amounts to 0.83%, indicating that women earn, on average, 0.83% less than men.
 
-## IPW
 An issue that is often overlooked by the Oaxaca-Blinder is that of group comparability. For instance, we coud have Male in their early thirties with a specific job function (e.g., sales associate) and seniority but not female counterparts, and vice versa. This is a common situation since female may tend to concentrate in certain occupations for which specific skills are more likely to be found, whereas male may concentrate in other occupations.
 This issue is also known as "common support" issue, which is crucially overlooked by the Oaxaca-blinder. In fact, since in the Oaxaca-blinder model there are no restrictions imposed on estimating earnings for male and female with comparable characteristics [Ñopo, 2004]('https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g'). 
 
-A procedure that allows us to account for group comparability is that of Inverse Probability Weighting Regression Adjustement (IPWRA). 
+
+## IPWRA
+A procedure that allows us to account for group comparability is that of Inverse Probability Weighting Regression Adjustement (IPW). 
+
+IPWRA uses two steps:
+- Calculate weights based on the probability of being female (using a model such as probit or logit).
+- Fit a weighted regression model within each group and estimate the treatment effect on the outcome.
+
+In other words, the idea is to assign weights to observation in our sample, by giving larger weights to observation that are similar to each other, and smaller weights to the rest. This way we can introduce some adjustements to increase men and women comparability.
+
 
 ```{r}
+# Load necessary packages
+library(dplyr)
+library(boot)
+
 formula_ipw = 'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'
 
-formula_lm = 'BasePay_log ~  Age + PerfEval + Education + Seniority + Dept + JobTitle'
+formula_lm = 'BasePay_log ~  Gender_fac + Age + PerfEval + Education + Seniority + Dept + JobTitle'
 
-weights_ipw = glm(formula_ipw,
-                    family = binomial(link = 'probit'),
-                    data = df_clean)    
-# Step 1: Calculate ipw weights
-ipw_w = predict(weights_ipw, df_clean, type ='response')
-outcome = df_clean$Gender_fac
-df_clean$ipw_wts = (outcome/ipw_w) + ((1-outcome)/ (1-ipw_w)) 
+set.seed(3112024) #for reproducibility purposes
+# Define the IPWRA estimation function. Here we run it using a bootstrap approach to obtain CIs and compare the estimates afterwards.
 
-# Step 2: Fit Weighted Regression Models for Each Gender Group
-# Model for females
-model_female <- lm(formula_lm, data=df_clean, subset = (Gender_fac == 1), weights = ipw_wts)
+ipwra_estimation <- function(data, indices) {
+  
+  # Subset data based on resampled indices
+  df_resampled <- data[indices, ]
+  
+  # Step 1: Fit a propensity score model to obtain IP weights
+  propensity_model <- glm(formula_ipw,
+                          family = binomial(link = 'probit'),
+                          data = df_resampled)
+  
+  # Calculate IP weights based on propensity scores
+  ip_weights <- predict(propensity_model, df_resampled, type = 'response')
+  outcome <- df_resampled$Gender_fac
+  df_resampled$ipw_weights <- (outcome / ip_weights) + ((1 - outcome) / (1 - ip_weights))
+  
+  # Step 2: Fit weighted regression models for each gender group
+  model_female <- lm(formula_lm,
+                     data = df_resampled, subset = (Gender_fac == 1), weights = ipw_weights)
+  
+  model_male <- lm(formula_lm,
+                   data = df_resampled, subset = (Gender_fac == 0), weights = ipw_weights)
+  
+  # Step 3: Predict the adjusted salaries and calculate the average treatment effect (ATE)
+  df_resampled$predicted_female <- predict(model_female, newdata = df_resampled, type = "response")
+  df_resampled$predicted_male <- predict(model_male, newdata = df_resampled, type = "response")
+  
+  mean_predicted_female <- mean(df_resampled$predicted_female, na.rm = TRUE)
+  mean_predicted_male <- mean(df_resampled$predicted_male, na.rm = TRUE)
+  
+  # Calculate the GPG estimate
+  ATE <- exp(mean_predicted_female) - exp(mean_predicted_male)
+  ATE_percentage <- (ATE / exp(mean_predicted_male)) * 100
+  
+  return(ATE_percentage)
+}
 
-# Model for males
-model_male <- lm(formula_lm, data=df_clean, subset = (Gender_fac == 0), weights = ipw_wts)
+# Run the bootstrap with 1000 resamples
+bootstrap_results <- boot(data = df_clean, statistic = ipwra_estimation, R = 1000)
 
+# Obtain the 95% confidence interval
+ci <- boot.ci(bootstrap_results, type = "perc")
 
-# Step 3: Calculate Average Treatment Effect (ATE)
-# Get predicted values for females and males
-df_clean$predicted_female = predict(model_female, newdata = df_clean, type = "response", subset = (female == 1))
-
-df_clean$predicted_male = predict(model_male, newdata = df_clean, type = "response", subset = (female == 0))
-
-# Step 4: Calculate the average predicted wages
-mean_predicted_female = mean(df_clean$predicted_female, na.rm = TRUE)
-mean_predicted_male = mean(df_clean$predicted_male, na.rm = TRUE)
-
-# Step 5: Calculate the Average Treatment Effect (ATE)
-ATE = exp(mean_predicted_female) - exp(mean_predicted_male)
-
-# Display the ATE as a percentage
-ATE_percentage = (ATE / exp(mean_predicted_male)) * 100
-cat("The estimated Average Treatment Effect (ATE) of being female on wage is:", round(ATE_percentage, 2), "%\n")
-# fit with ipw weights
-#formula_lm = 'BasePay_log ~ Gender_fac'
-
-#mod = lm(formula_lm, data = df_clean, weights= ipw_wts)
-
-#library(marginaleffects)
-
-#comp = avg_comparisons(mod, 
-#                       variables = 'Gender_fac', 
-#                       vcov =~subclass, 
-#                       newdata = subset(df_clean, Gender_fac ==1), 
-#                       wts = 'ipw_wts')
-#AGPG_ipw = round((exp(comp['estimate'])-1)*100,2)
-
-#paste0("The AGPG estimated by IPW is = ", AGPG_ipw, "%")
+# Print the results
+cat("The estimated Average Treatment Effect (ATE) of being female on wage is:", 
+    round(mean(bootstrap_results$t), 2), "%\n")
 ```
+
+After weighting and adjusting for relevant factors, the estimated pay gap is approximately 1.45%, which is quite different from the Oaxaca-Blinder method. IPWRA, however, is not a cure-all approach and other methodologies exist to improve group's comparability. One of the most known one is that of matching.
 
 ## Matching 
 
+Matching is another approach to address common support issues. Unlike IPWRA, matching creates pairs or groups of individuals with similar characteristics across treatment groups (e.g., male and female) and then compares them directly. Here, we use full matching to ensure each observation finds the closest comparable counterpart.
+
+To do that, we first create a matched sample. 
 ```{r}
 library(MatchIt)
 
+# Step 1: Run the full-matching algorithm
 match = matchit(as.formula(formula_ipw), 
                 method = 'full', 
                 data = df_clean,
                 distance = 'glm')
+```
 
+Then, we evaluate the similarity between the samples by looking at the standardized mean differences for each covariate between men and women. A well-balanced sample would reasult in mean differences close to 0. 
+
+```{r}
 # Checking balance after cem matching
 summary(match, un = FALSE)
+
 ```
+
+As we can see, in this example, for some groups men and women are not fully comparable. For instance, we observe a negative and positive mean difference between men and women in the Administration Department and Sales Department, respectively. This may not be surprising, since women are more ofte found in administration positions whereas men in sales positions (cite).
+
+Finally, we calculate the Adjusted GPG on this matched sample.
 
 ```{r}
 df_out = match.data(match)
 
 
-# Step 3: Estimate the Treatment Effect with Weights
-# Use the weights in the linear model
+# Step 2: Estimate the Treatment Effect with Weights obtained from matching
 mod_matched <- lm(BasePay_log ~  Gender_fac, data = df_out, weights = weights)
 
-# Step 4: Calculate the Average Treatment Effect
-# The coefficient on 'female' now represents the weighted estimate of the treatment effect
-summary(mod_matched)
-
-# Step 5: Convert the Effect from Log Wage to Percentage
+# Step 3: Convert the Effect from Log Wage to Percentage
 # Extract the coefficient for female
 female_coef <- coef(mod_matched)["Gender_fac"]
 
 ATE_percentage <- (exp(female_coef) - 1) * 100
-cat("The estimated Average Treatment Effect (ATE) of being female on wage #is:", round(ATE_percentage, 2), "%\n")
+cat("The estimated AGPG using matching is:", round(ATE_percentage, 2), "%\n")
+```
 
-# fit with ipw weights
-#formula_lm = 'BasePay_log ~ Gender_fac'
+The matching approach estimates an adjusted gender pay gap of -2.51%, which again differs from those reported before. 
 
-#mod = lm(formula_lm, data = df_out, weights= weights)
-
-#comp = avg_comparisons(mod, 
-#                       variables = 'Gender_fac', 
-#                       vcov =~subclass, 
-#                       newdata = subset(df_out, Gender_fac ==1), 
-#                       wts = 'weights')
-#AGPG_match = round((exp(comp['estimate'])-1)*100,2)
-
-#paste0("The AGPG estimated by full matching is = ", AGPG_match, "%")
+```{r}
+twofold
+cat("95% Confidence Interval:", round(ci$percent[4:5], 2), "%\n")
+confint(mod_matched)
 ```
