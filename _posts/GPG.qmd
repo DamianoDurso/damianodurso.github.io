@@ -98,22 +98,32 @@ As we can see, the UGPG seems to be -8.65% meaning that women earn, on average, 
 
 The AGPG can be seen as a refined UGPG, where individual characteristics are taken into account when comparing men and women differences in salary.
 
+## Linear regression
+A very simple approach to calculate the AGPG is to run a linear regression including the different variables we expect to pay in addition to those that may have an impact on pay but only due to discrimination. When we apply this approach using our data
+
+```{r}
+#Salary variables are often skewed so we first log transform it to make it approximately normal
+df_clean$BasePay_log = log(df_clean$BasePay)
+#The linear model requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1
+df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
+
+mod = lm('BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle + Gender_fac', 
+         df_clean)
+
+# Extract Gender Pay Gap. Note that we exponentiate the coefficient since oaxaca.results outcome is log-transformed, and we subtract 1 from it due to its dummy form. Then we multiply times 100 to bring it into percentage
+
+paste0('AGPG based on linear regression =' ,round((exp(coef(mod)['Gender_fac'])-1)*100,3))
+
+```
+
 ## Oaxaca Blinder
+A limitation of the linear regression is that we assume that the relationship between 
 A typical approach to calculate the AGPG is the Oaxaca-Blinder method. This approach is a statistical method used to decompose pay differences into explainable factors (differences in education or experience) and unexplainable factors (someone's gender).
 This method allows for a clearer understanding of how much of the pay gap can be explained by measurable differences versus systemic inequalities.
 
 Let's see how we can apply the Oaxaca-Blinder method to our dataset
 ```{r}
-#library(oaxaca)
-library(psych)
 library(OaxacaBlinder)
-#Salary variables are often skewed so we first log transform it to make it approximately normal
-df_clean$BasePay_log = log(df_clean$BasePay)
-#Oaxaca-blinder requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1
-df_clean$Gender_fac = ifelse(df_clean$Gender == "Male", 0, 1)
-
-#oaxaca.results = oaxaca(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac, data = df_clean)
-
 twofold = OaxacaBlinderDecomp(
   formula = BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac,
   data = df_clean,
@@ -124,8 +134,47 @@ twofold = OaxacaBlinderDecomp(
 #AGPG = round(((oaxaca.results$y$y.A - oaxaca.results$y$y.B)/oaxaca.results$y$y.A)*100,2)
 
 #paste0("The AGPG estimated through Oaxaca-Blinder = ", -1*AGPG, "%")
-summary(twofold)
-twofold$gaps
+#summary(twofold)
+paste0('AGPG based on Oaxaca-Blinder regression =' ,round((twofold$gaps$pct_gap*-1)*100,3))
+```
+
+```{r}
+# Load necessary libraries
+library(OaxacaBlinder)
+library(boot)
+
+# Define the bootstrap function
+oaxaca_gap_bootstrap <- function(data, indices) {
+  # Resample the data
+  df_resampled <- data[indices, ]
+  
+  # Perform Oaxaca-Blinder decomposition on the resampled data
+  oaxaca_res <- OaxacaBlinderDecomp(
+    formula = BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle | Gender_fac,
+    data = df_resampled,
+    type = "twofold",
+    baseline_invariant = TRUE
+  )
+  
+  # Extract the gender pay gap percentage
+  pct_gap <- oaxaca_res$twofold$gaps$pct_gap * -1 * 100
+  
+  # Return the gap
+  return(pct_gap)
+}
+
+# Run bootstrap with 1000 replications
+set.seed(123) # For reproducibility
+bootstrap_results <- boot(data = df_clean, statistic = oaxaca_gap_bootstrap, R = 10)
+
+# Calculate 95% CI for the gender pay gap
+gap_ci <- boot.ci(bootstrap_results, type = "perc")
+
+# Display results
+cat("Bootstrap Results for Overall Gender Pay Gap:\n")
+cat("Estimated Pay Gap (Mean):", mean(bootstrap_results$t), "%\n")
+cat("95% CI for Gender Pay Gap:", gap_ci$percent[4:5], "%\n")
+
 ```
 
 What we can see from the Oaxaca-blinder results is that the Gender pay gap amounts to 0.83%, indicating that women earn, on average, 0.83% less than men.
@@ -134,84 +183,18 @@ An issue that is often overlooked by the Oaxaca-Blinder is that of group compara
 This issue is also known as "common support" issue, which is crucially overlooked by the Oaxaca-blinder. In fact, since in the Oaxaca-blinder model there are no restrictions imposed on estimating earnings for male and female with comparable characteristics [Ñopo, 2004]('https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g'). 
 
 
-## IPWRA
-A procedure that allows us to account for group comparability is that of Inverse Probability Weighting Regression Adjustement (IPW). 
-
-IPWRA uses two steps:
-- Calculate weights based on the probability of being female (using a model such as probit or logit).
-- Fit a weighted regression model within each group and estimate the treatment effect on the outcome.
-
-In other words, the idea is to assign weights to observation in our sample, by giving larger weights to observation that are similar to each other, and smaller weights to the rest. This way we can introduce some adjustements to increase men and women comparability.
-
-
-```{r}
-# Load necessary packages
-library(dplyr)
-library(boot)
-
-formula_ipw = 'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'
-
-formula_lm = 'BasePay_log ~  Gender_fac + Age + PerfEval + Education + Seniority + Dept + JobTitle'
-
-set.seed(3112024) #for reproducibility purposes
-# Define the IPWRA estimation function. Here we run it using a bootstrap approach to obtain CIs and compare the estimates afterwards.
-
-ipwra_estimation <- function(data, indices) {
-  
-  # Subset data based on resampled indices
-  df_resampled <- data[indices, ]
-  
-  # Step 1: Fit a propensity score model to obtain IP weights
-  propensity_model <- glm(formula_ipw,
-                          family = binomial(link = 'probit'),
-                          data = df_resampled)
-  
-  # Calculate IP weights based on propensity scores
-  ip_weights <- predict(propensity_model, df_resampled, type = 'response')
-  outcome <- df_resampled$Gender_fac
-  df_resampled$ipw_weights <- (outcome / ip_weights) + ((1 - outcome) / (1 - ip_weights))
-  
-  # Step 2: Fit weighted regression models for each gender group
-  model_female <- lm(formula_lm,
-                     data = df_resampled, subset = (Gender_fac == 1), weights = ipw_weights)
-  
-  model_male <- lm(formula_lm,
-                   data = df_resampled, subset = (Gender_fac == 0), weights = ipw_weights)
-  
-  # Step 3: Predict the adjusted salaries and calculate the average treatment effect (ATE)
-  df_resampled$predicted_female <- predict(model_female, newdata = df_resampled, type = "response")
-  df_resampled$predicted_male <- predict(model_male, newdata = df_resampled, type = "response")
-  
-  mean_predicted_female <- mean(df_resampled$predicted_female, na.rm = TRUE)
-  mean_predicted_male <- mean(df_resampled$predicted_male, na.rm = TRUE)
-  
-  # Calculate the GPG estimate
-  ATE <- exp(mean_predicted_female) - exp(mean_predicted_male)
-  ATE_percentage <- (ATE / exp(mean_predicted_male)) * 100
-  
-  return(ATE_percentage)
-}
-
-# Run the bootstrap with 1000 resamples
-bootstrap_results <- boot(data = df_clean, statistic = ipwra_estimation, R = 1000)
-
-# Obtain the 95% confidence interval
-ci <- boot.ci(bootstrap_results, type = "perc")
-
-# Print the results
-cat("The estimated Average Treatment Effect (ATE) of being female on wage is:", 
-    round(mean(bootstrap_results$t), 2), "%\n")
-```
-
-After weighting and adjusting for relevant factors, the estimated pay gap is approximately 1.45%, which is quite different from the Oaxaca-Blinder method. IPWRA, however, is not a cure-all approach and other methodologies exist to improve group's comparability. One of the most known one is that of matching.
-
 ## Matching 
+A procedure that allows us to account for group comparability is that of matching. 
 
-Matching is another approach to address common support issues. Unlike IPWRA, matching creates pairs or groups of individuals with similar characteristics across treatment groups (e.g., male and female) and then compares them directly. Here, we use full matching to ensure each observation finds the closest comparable counterpart.
+Matching is a known approach to address common support issues. Unlike simple linear regression and Oaxaca, matching creates pairs or groups of individuals with similar characteristics across treatment groups (e.g., male and female) and then compares them directly. Here, we use full matching to ensure each observation finds the closest comparable counterpart.
 
 To do that, we first create a matched sample. 
 ```{r}
 library(MatchIt)
+
+# Step 0: define formula for predicting gender
+formula_ipw = 'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'
+
 
 # Step 1: Run the full-matching algorithm
 match = matchit(as.formula(formula_ipw), 
@@ -230,27 +213,28 @@ summary(match, un = FALSE)
 
 As we can see, in this example, for some groups men and women are not fully comparable. For instance, we observe a negative and positive mean difference between men and women in the Administration Department and Sales Department, respectively. This may not be surprising, since women are more ofte found in administration positions whereas men in sales positions (cite).
 
-Finally, we calculate the Adjusted GPG on this matched sample.
+Finally, we calculate the Adjusted GPG on this matched sample using a simple regression model .
 
 ```{r}
 df_out = match.data(match)
 
 
 # Step 2: Estimate the Treatment Effect with Weights obtained from matching
-mod_matched <- lm(BasePay_log ~  Gender_fac, data = df_out, weights = weights)
+mod_matched <- lm(BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle + Gender_fac, data = df_out, weights = weights)
 
 # Step 3: Convert the Effect from Log Wage to Percentage
 # Extract the coefficient for female
 female_coef <- coef(mod_matched)["Gender_fac"]
 
 ATE_percentage <- (exp(female_coef) - 1) * 100
-cat("The estimated AGPG using matching is:", round(ATE_percentage, 2), "%\n")
+cat("AGPG based on matched regression:", round(ATE_percentage, 2), "%\n")
 ```
 
 The matching approach estimates an adjusted gender pay gap of -2.51%, which again differs from those reported before. 
 
 ```{r}
+(exp(confint(mod)[21,])-1)*100
 twofold
-cat("95% Confidence Interval:", round(ci$percent[4:5], 2), "%\n")
-confint(mod_matched)
+#cat("95% Confidence Interval:", round(ci$percent[4:5], 2), "%\n")
+(exp(confint(mod_matched)[21,])-1)*100
 ```
