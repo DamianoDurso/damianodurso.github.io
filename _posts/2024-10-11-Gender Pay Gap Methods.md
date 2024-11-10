@@ -66,28 +66,12 @@ Kaggle]('https://www.kaggle.com/datasets/nilimajauhari/glassdoor-analyze-gender-
 This dataset includes 1,000 records of individual salaries, bonuses, job
 titles, and other attributes relevant to compensation.
 
-::: cell
+
 ``` {.r .cell-code}
 df = read.csv("Glassdoor Gender Pay Gap.csv")
 head(df) ; nrow(df)
 ```
 
-::: {.cell-output .cell-output-stdout}
-                 JobTitle Gender Age PerfEval Education           Dept Seniority
-    1    Graphic Designer Female  18        5   College     Operations         2
-    2   Software Engineer   Male  21        5   College     Management         5
-    3 Warehouse Associate Female  19        4       PhD Administration         5
-    4   Software Engineer   Male  20        5   Masters          Sales         4
-    5    Graphic Designer   Male  26        5   Masters    Engineering         5
-    6                  IT Female  20        5       PhD     Operations         4
-      BasePay Bonus
-    1   42363  9938
-    2  108476 11128
-    3   90208  9268
-    4  108080 10154
-    5   99464  9319
-    6   70890 10126
-:::
 
 ::: {.cell-output .cell-output-stdout}
     [1] 1000
@@ -101,11 +85,30 @@ characteristics such as age, performance, seniority, and education
 across genders. This initial exploration can reveal structural
 differences between groups and highlight areas that may need adjustment.
 
-::: cell
-::: cell-output-display
-![](GPG_files/figure-markdown/unnamed-chunk-2-1.png)
-:::
-:::
+```{r, echo = FALSE}
+#| fig-width: 12
+#| fig-height: 10
+# Load necessary libraries
+library(psych)
+library(GGally)
+library(oaxaca)
+
+
+# Remove any rows with missing data
+df_clean <- na.omit(df)
+
+# Generate the ggpairs plot with boxplots and correlations
+pm <- ggpairs(
+  df_clean[, c(8,3,4,7,5)], # Include the desired columns
+  mapping = aes(colour = as.factor(df_clean$Gender)), # Specify the color mapping here
+  title = "Plots and Correlations for GlassDoor Data by Male and Female" # Optional: Add title
+  )
+
+
+# Display the plot
+print(pm)
+
+```
 
 In this plot, we see distributions and joint relationships between age,
 performance evaluation, seniority, and education. There are apparent
