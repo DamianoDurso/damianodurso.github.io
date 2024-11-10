@@ -67,7 +67,7 @@ This dataset includes 1,000 records of individual salaries, bonuses, job
 titles, and other attributes relevant to compensation.
 
 
-```r
+```{r}
 df = read.csv("Glassdoor Gender Pay Gap.csv")
 head(df) ; nrow(df)
 ```
@@ -81,7 +81,7 @@ characteristics such as age, performance, seniority, and education
 across genders. This initial exploration can reveal structural
 differences between groups and highlight areas that may need adjustment.
 
-```r
+```{r}
 #| fig-width: 12
 #| fig-height: 10
 # Load necessary libraries
@@ -122,7 +122,7 @@ the definition above which is $$
 $$
 
 
-```r
+```{r}
 avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
 avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
 GPG = round(((avg_pay_men-avg_pay_women)/avg_pay_men)*100,2)
