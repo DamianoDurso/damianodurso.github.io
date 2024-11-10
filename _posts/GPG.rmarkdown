@@ -26,6 +26,7 @@ execute:
 
 ---
 
+
 # The Push for Pay Transparency
 In today’s workplace, Diversity, Equity, and Inclusion (DEI) go beyond policies; they’re about **ensuring everyone is treated and compensated fairly, regardless of gender, race, or other "protected" characteristics**. A key measure of fair compensation is the gender pay gap (GPG), which identifies differences in average pay between men and women. **With recent directives like the upcoming EU pay transparency regulation, companies are increasingly required to disclose pay data**, which underscores the need for accurate and meaningful GPG reporting.
 
@@ -50,13 +51,16 @@ The AGPG can vary significantly based on the adjustments made, and determining w
 For this post, I will be using the [Glassdoor Gender Pay Gap data from Kaggle]('https://www.kaggle.com/datasets/nilimajauhari/glassdoor-analyze-gender-pay-gap').
 This dataset includes 1,000 records of individual salaries, bonuses, job titles, and other attributes relevant to compensation.
 
+
 ```{r}
 df = read.csv("Glassdoor Gender Pay Gap.csv")
 head(df) ; nrow(df)
 ```
 
+
 ## Data Exploration
 Before calculating the UGPG and AGPG, it is crucial to examine characteristics such as age, performance, seniority, and education across genders. This initial exploration can reveal structural differences between groups and highlight areas that may need adjustment.
+
 
 ```{r, echo = FALSE}
 #| fig-width: 12
@@ -83,6 +87,7 @@ print(pm)
 
 ```
 
+
 In this plot, we see distributions and joint relationships between age, performance evaluation, seniority, and education. There are apparent differences across genders, suggesting that groups may not be fully comparable in all characteristics. We’ll address this issue further in the analysis.
 
 # Unadjusted Gender Pay Gap
@@ -94,6 +99,7 @@ $$
 $$
 
 
+
 ```{r}
 avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
 avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
@@ -103,6 +109,7 @@ paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
 
 ```
 
+
 the UGPG here is -8.65%, meaning women earn 8.65% less than men, on average. However, this simple metric doesn’t account for other pay-determining factors, such as job title or experience. **The UGPG is a broad measure, which is why many companies also report AGPG**.
 
 # Adjusted GPG
@@ -111,6 +118,7 @@ The AGPG can be seen as a refined UGPG, where individual characteristics are tak
 
 ## Linear regression
 Linear regression is a simple yet effective method to calculate the AGPG. For our data we consider different variables that we expect to influence pay such as education, seniority, and performance, alongside gender. 
+
 
 ```{r}
 #Salary variables are often skewed so we first log transform it to make it approximately normal
@@ -130,10 +138,12 @@ paste0('AGPG based on linear regression =' ,AGPGLM)
 ci_lm = ((exp(confint(mod)[21,])-1)*100)
 ```
 
+
 Here, based on the linear regression results women are paid -1.05% less than men on average, after adjusting for individual characteristics. However, this linear model assumes that the impact of factors like seniority is identical for men and women, which might not capture true gender-specific effects. 
 
 ## The Oaxaca Blinder Decomposition
 An approach that overcomes this linear regression limitation is the Oaxaca-Blinder Decomposition, which is statistical method that decomposes pay differences into explainable factors (differences in education or experience) and unexplainable factors (someone's gender). Oaxaca-blinder fits different regression for men and women, thus allowing for gender-specific relationships between individual characteristics and pay.
+
 
 ```{r}
 # Load necessary libraries
@@ -174,6 +184,7 @@ AGPGOB = round(mean(bootstrap_results$t*-1),2)*-1
 cat('AGPG based on Oaxaca-Blinder =', AGPGOB, "%\n")
 ```
 
+
 The Oaxaca-blinder results show that the AGPG is -0.86%, indicating that women earn, on average, 0.86% less than men. This model overcomes the linear regression limitation by allowing gender-specific relationships with pay.
 
 An issue that is often overlooked by the Oaxaca-Blinder is that of group comparability. For instance, we coud have men in their early thirties with a specific job function (e.g., sales associate) and seniority but not women counterparts, and vice versa. This is a common situation since women may tend to concentrate in certain occupations for which specific skills are more likely to be found, whereas men may concentrate in other occupations [(England et al. 2007)]('https://nyuscholars.nyu.edu/en/publications/does-bad-pay-cause-occupations-to-feminize-does-feminization-redu').  In the Oaxaca-blinder model there are no restrictions imposed on estimating earnings for male and female with comparable characteristics [(Ñopo, 2004)]('https://www.iza.org/publications/dp/981/matching-as-a-tool-to-decompose-wage-g'). This issue is also known as "common support" issue. 
@@ -185,6 +196,7 @@ Matching addresses common support issues by pairing individuals with similar cha
 Here, we use full matching to keep all observations in our small dataset while ensuring that each observation finds the closest comparable counterpart.
 
 To do that, we first create a matched sample. 
+
 ```{r}
 library(MatchIt)
 
@@ -199,7 +211,9 @@ match = matchit(as.formula(formula_ipw),
                 distance = 'glm')
 ```
 
+
 Then, we evaluate the similarity between the samples by looking at the standardized mean differences for each covariate between men and women. A well-balanced sample would reasult in mean differences close to 0. 
+
 
 ```{r}
 # Checking balance after cem matching
@@ -207,9 +221,11 @@ summary(match, un = FALSE)
 
 ```
 
+
 As we can see, men and women are not fully comparable across all characteristics. For instance, we observe a negative and positive mean difference between men and women in the Administration Department and Sales Department, respectively. 
 
 Finally, we calculate the Adjusted GPG on this matched sample using a simple regression model.
+
 
 ```{r}
 df_out = match.data(match)
@@ -229,11 +245,13 @@ cat("AGPG based on matched regression:", AGPG_MLM, "%\n")
 ci_mlm = (exp(confint(mod_matched)[21,])-1)*100
 ```
 
+
 The matched approach results in an AGPG of -2.29%. This suggests that when controlling for comparable characteristics, women earn 2.29% less than men on average. Matching mitigates bias from non-comparable characteristics, offering an improved comparison between genders.
 
 ## Comparing the results 
 
 Last but not least, one aspect often underlooked is that of confidence around the AGPG estimates. While it may be appealing for companies to report only point estimates, it should be essential to consider the statistical significance of these estimates in addition to the practical significance. That is, how certain can we be that the estimated AGPG actually differs from 0 (i.e., no gender pay gap)?
+
 
 
 ```{r}
@@ -262,6 +280,7 @@ ggplot(df, aes(x = Method, y = Estimate)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red")+  # Add a zero line for reference
   ylim(-10, 10)
 ```
+
 
 In the plot above we show the AGPG estimates and their confidence intervals for each method. Note that only for Oaxaca-Blinder[^1] and linear regression after matching, we would conclude that the adjusted gender pay gap is statistically significant. 
 
