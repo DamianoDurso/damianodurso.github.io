@@ -1,13 +1,16 @@
 ---
-title: "Gender Pay Gap Methods"
-format: 
-  markdown: 
-    variant: gfm # GitHub-flavored markdown
-    keep-md: true # Keeps the intermediate .md file for GitHub Pages
-execute: 
-  warning: false
-  message: true
-  echo: true
+project:
+  type: website
+  output-dir: docs
+#title: "Gender Pay Gap Methods"
+#format: 
+#  markdown: 
+#    variant: gfm # GitHub-flavored markdown
+#    keep-md: true # Keeps the intermediate .md file for GitHub Pages
+#execute: 
+#  warning: false
+#  message: true
+#  echo: true
 
 #For editing
 #title: "Gender Pay Gap Methods"

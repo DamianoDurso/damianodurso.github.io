@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>gpg</title>
+<title>Gender Pay Gap Methods</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,16 +57,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="GPG_files/libs/clipboard/clipboard.min.js"></script>
-<script src="GPG_files/libs/quarto-html/quarto.js"></script>
-<script src="GPG_files/libs/quarto-html/popper.min.js"></script>
-<script src="GPG_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="GPG_files/libs/quarto-html/anchor.min.js"></script>
-<link href="GPG_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="GPG_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="GPG_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="GPG_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="GPG_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/clipboard/clipboard.min.js"></script>
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/quarto.js"></script>
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/popper.min.js"></script>
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/anchor.min.js"></script>
+<link href="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="2024-10-11-Gender Pay Gap Methods_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="2024-10-11-Gender Pay Gap Methods_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="2024-10-11-Gender Pay Gap Methods_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="2024-10-11-Gender Pay Gap Methods_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -79,7 +79,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Gender Pay Gap Methods</h1>
+</div>
 
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
 
 <section id="the-push-for-pay-transparency" class="level1">
 <h1>The Push for Pay Transparency</h1>
@@ -101,74 +116,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-data" class="level2">
 <h2 class="anchored" data-anchor-id="the-data">The Data</h2>
 <p>For this post, I will be using the <a href="'https://www.kaggle.com/datasets/nilimajauhari/glassdoor-analyze-gender-pay-gap'">Glassdoor Gender Pay Gap data from Kaggle</a>. This dataset includes 1,000 records of individual salaries, bonuses, job titles, and other attributes relevant to compensation.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"Glassdoor Gender Pay Gap.csv"</span>)</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"Glassdoor Gender Pay Gap.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df) ; <span class="fu">nrow</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             JobTitle Gender Age PerfEval Education           Dept Seniority
-1    Graphic Designer Female  18        5   College     Operations         2
-2   Software Engineer   Male  21        5   College     Management         5
-3 Warehouse Associate Female  19        4       PhD Administration         5
-4   Software Engineer   Male  20        5   Masters          Sales         4
-5    Graphic Designer   Male  26        5   Masters    Engineering         5
-6                  IT Female  20        5       PhD     Operations         4
-  BasePay Bonus
-1   42363  9938
-2  108476 11128
-3   90208  9268
-4  108080 10154
-5   99464  9319
-6   70890 10126</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1000</code></pre>
-</div>
-</div>
 </section>
 <section id="data-exploration" class="level2">
 <h2 class="anchored" data-anchor-id="data-exploration">Data Exploration</h2>
 <p>Before calculating the UGPG and AGPG, it is crucial to examine characteristics such as age, performance, seniority, and education across genders. This initial exploration can reveal structural differences between groups and highlight areas that may need adjustment.</p>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'psych' was built under R version 4.3.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: ggplot2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'ggplot2'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:psych':
-
-    %+%, alpha</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Registered S3 method overwritten by 'GGally':
-  method from   
-  +.gg   ggplot2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Please cite as: </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code> Hlavac, Marek (2022). oaxaca: Blinder-Oaxaca Decomposition in R.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code> R package version 0.1.5. https://CRAN.R-project.org/package=oaxaca </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="GPG_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="1152"></p>
-</div>
-</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 12</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 10</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(oaxaca)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove any rows with missing data</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df_clean <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the ggpairs plot with boxplots and correlations</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">ggpairs</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  df_clean[, <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">7</span>,<span class="dv">5</span>)], <span class="co"># Include the desired columns</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">colour =</span> <span class="fu">as.factor</span>(df_clean<span class="sc">$</span>Gender)), <span class="co"># Specify the color mapping here</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Plots and Correlations for GlassDoor Data by Male and Female"</span> <span class="co"># Optional: Add title</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the plot</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In this plot, we see distributions and joint relationships between age, performance evaluation, seniority, and education. There are apparent differences across genders, suggesting that groups may not be fully comparable in all characteristics. We’ll address this issue further in the analysis.</p>
 </section>
 </section>
@@ -177,16 +151,11 @@ Please cite as: </code></pre>
 <p>The first step in analyzing the GPG would be calculating the average difference in pay between man and women, also called the Unadjusted Gender Pay gap. In our case we will be calculating this metric following the definition above which is <span class="math display">\[
 \text{UGPG} = \frac{\text{Avg. male earnings} - \text{Avg. female earnings}}{\text{Avg. male earnings}} \times 100\%
 \]</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>avg_pay_men <span class="ot">=</span> <span class="fu">mean</span>(df[df[<span class="st">'Gender'</span>] <span class="sc">==</span> <span class="st">'Male'</span>, <span class="st">'BasePay'</span>])</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>avg_pay_women <span class="ot">=</span> <span class="fu">mean</span>(df[df[<span class="st">'Gender'</span>] <span class="sc">==</span> <span class="st">'Female'</span>, <span class="st">'BasePay'</span>])</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>GPG <span class="ot">=</span> <span class="fu">round</span>(((avg_pay_men<span class="sc">-</span>avg_pay_women)<span class="sc">/</span>avg_pay_men)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"The Unadjusted Gender Pay Gap is = "</span>, GPG, <span class="st">"%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "The Unadjusted Gender Pay Gap is = 8.65%"</code></pre>
-</div>
-</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>avg_pay_men <span class="ot">=</span> <span class="fu">mean</span>(df[df[<span class="st">'Gender'</span>] <span class="sc">==</span> <span class="st">'Male'</span>, <span class="st">'BasePay'</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>avg_pay_women <span class="ot">=</span> <span class="fu">mean</span>(df[df[<span class="st">'Gender'</span>] <span class="sc">==</span> <span class="st">'Female'</span>, <span class="st">'BasePay'</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>GPG <span class="ot">=</span> <span class="fu">round</span>(((avg_pay_men<span class="sc">-</span>avg_pay_women)<span class="sc">/</span>avg_pay_men)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"The Unadjusted Gender Pay Gap is = "</span>, GPG, <span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>the UGPG here is -8.65%, meaning women earn 8.65% less than men, on average. However, this simple metric doesn’t account for other pay-determining factors, such as job title or experience. <strong>The UGPG is a broad measure, which is why many companies also report AGPG</strong>.</p>
 </section>
 <section id="adjusted-gpg" class="level1">
@@ -196,23 +165,23 @@ Please cite as: </code></pre>
 <h2 class="anchored" data-anchor-id="linear-regression">Linear regression</h2>
 <p>Linear regression is a simple yet effective method to calculate the AGPG. For our data we consider different variables that we expect to influence pay such as education, seniority, and performance, alongside gender.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Salary variables are often skewed so we first log transform it to make it approximately normal</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df_clean<span class="sc">$</span>BasePay_log <span class="ot">=</span> <span class="fu">log</span>(df_clean<span class="sc">$</span>BasePay)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#The linear model requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df_clean<span class="sc">$</span>Gender_fac <span class="ot">=</span> <span class="fu">ifelse</span>(df_clean<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"Male"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(<span class="st">'BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle + Gender_fac'</span>, </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>         df_clean)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract Gender Pay Gap. Note that we exponentiate the coefficient since oaxaca.results outcome is log-transformed, and we subtract 1 from it due to its dummy form. Then we multiply times 100 to bring it into percentage</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>AGPGLM <span class="ot">=</span> <span class="fu">round</span>((<span class="fu">exp</span>(<span class="fu">coef</span>(mod)[<span class="st">'Gender_fac'</span>])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">'AGPG based on linear regression ='</span> ,AGPGLM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Salary variables are often skewed so we first log transform it to make it approximately normal</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_clean<span class="sc">$</span>BasePay_log <span class="ot">=</span> <span class="fu">log</span>(df_clean<span class="sc">$</span>BasePay)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#The linear model requires to have the "grouping" variable dummified, here we have Men coded as 0 and Women coded as 1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df_clean<span class="sc">$</span>Gender_fac <span class="ot">=</span> <span class="fu">ifelse</span>(df_clean<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"Male"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(<span class="st">'BasePay_log ~ Age + PerfEval + Education + Seniority + Dept + JobTitle + Gender_fac'</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         df_clean)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract Gender Pay Gap. Note that we exponentiate the coefficient since oaxaca.results outcome is log-transformed, and we subtract 1 from it due to its dummy form. Then we multiply times 100 to bring it into percentage</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>AGPGLM <span class="ot">=</span> <span class="fu">round</span>((<span class="fu">exp</span>(<span class="fu">coef</span>(mod)[<span class="st">'Gender_fac'</span>])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">'AGPG based on linear regression ='</span> ,AGPGLM)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "AGPG based on linear regression =-1.05"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#saving confidence intervals</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ci_lm <span class="ot">=</span> ((<span class="fu">exp</span>(<span class="fu">confint</span>(mod)[<span class="dv">21</span>,])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#saving confidence intervals</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ci_lm <span class="ot">=</span> ((<span class="fu">exp</span>(<span class="fu">confint</span>(mod)[<span class="dv">21</span>,])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here, based on the linear regression results women are paid -1.05% less than men on average, after adjusting for individual characteristics. However, this linear model assumes that the impact of factors like seniority is identical for men and women, which might not capture true gender-specific effects.</p>
 </section>
@@ -220,53 +189,42 @@ Please cite as: </code></pre>
 <h2 class="anchored" data-anchor-id="the-oaxaca-blinder-decomposition">The Oaxaca Blinder Decomposition</h2>
 <p>An approach that overcomes this linear regression limitation is the Oaxaca-Blinder Decomposition, which is statistical method that decomposes pay differences into explainable factors (differences in education or experience) and unexplainable factors (someone’s gender). Oaxaca-blinder fits different regression for men and women, thus allowing for gender-specific relationships between individual characteristics and pay.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OaxacaBlinder)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'boot' was built under R version 4.3.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'boot'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:psych':
-
-    logit</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the bootstrap function</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>oaxaca_gap_bootstrap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, indices) {</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Resample the data</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  df_resampled <span class="ot">&lt;-</span> data[indices, ]</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Perform Oaxaca-Blinder decomposition on the resampled data</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  oaxaca_res <span class="ot">&lt;-</span> <span class="fu">OaxacaBlinderDecomp</span>(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> BasePay_log <span class="sc">~</span> Age <span class="sc">+</span> PerfEval <span class="sc">+</span> Education <span class="sc">+</span> Seniority <span class="sc">+</span> Dept <span class="sc">+</span> JobTitle <span class="sc">|</span> Gender_fac,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_resampled,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"twofold"</span>,</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">baseline_invariant =</span> <span class="cn">TRUE</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract the gender pay gap percentage</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  pct_gap <span class="ot">&lt;-</span> oaxaca_res<span class="sc">$</span>gaps<span class="sc">$</span>pct_gap <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return the gap</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(pct_gap)</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Run bootstrap with 1000 replications</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># For reproducibility</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>bootstrap_results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> df_clean, <span class="at">statistic =</span> oaxaca_gap_bootstrap, <span class="at">R =</span> <span class="dv">100</span>)</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate 95% CI for the gender pay gap</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>gap_ci <span class="ot">&lt;-</span> <span class="fu">boot.ci</span>(bootstrap_results, <span class="at">type =</span> <span class="st">"perc"</span>)</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>ci_ob <span class="ot">=</span> gap_ci<span class="sc">$</span>perc[<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>AGPGOB <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(bootstrap_results<span class="sc">$</span>t<span class="sc">*-</span><span class="dv">1</span>),<span class="dv">2</span>)<span class="sc">*-</span><span class="dv">1</span></span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'AGPG based on Oaxaca-Blinder ='</span>, AGPGOB, <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OaxacaBlinder)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the bootstrap function</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>oaxaca_gap_bootstrap <span class="ot">&lt;-</span> <span class="cf">function</span>(data, indices) {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Resample the data</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  df_resampled <span class="ot">&lt;-</span> data[indices, ]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Perform Oaxaca-Blinder decomposition on the resampled data</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  oaxaca_res <span class="ot">&lt;-</span> <span class="fu">OaxacaBlinderDecomp</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> BasePay_log <span class="sc">~</span> Age <span class="sc">+</span> PerfEval <span class="sc">+</span> Education <span class="sc">+</span> Seniority <span class="sc">+</span> Dept <span class="sc">+</span> JobTitle <span class="sc">|</span> Gender_fac,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_resampled,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"twofold"</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">baseline_invariant =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract the gender pay gap percentage</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  pct_gap <span class="ot">&lt;-</span> oaxaca_res<span class="sc">$</span>gaps<span class="sc">$</span>pct_gap <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return the gap</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(pct_gap)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Run bootstrap with 1000 replications</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># For reproducibility</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>bootstrap_results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data =</span> df_clean, <span class="at">statistic =</span> oaxaca_gap_bootstrap, <span class="at">R =</span> <span class="dv">100</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate 95% CI for the gender pay gap</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>gap_ci <span class="ot">&lt;-</span> <span class="fu">boot.ci</span>(bootstrap_results, <span class="at">type =</span> <span class="st">"perc"</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>ci_ob <span class="ot">=</span> gap_ci<span class="sc">$</span>perc[<span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>AGPGOB <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">mean</span>(bootstrap_results<span class="sc">$</span>t<span class="sc">*-</span><span class="dv">1</span>),<span class="dv">2</span>)<span class="sc">*-</span><span class="dv">1</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'AGPG based on Oaxaca-Blinder ='</span>, AGPGOB, <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>AGPG based on Oaxaca-Blinder = -0.86 %</code></pre>
 </div>
@@ -280,25 +238,24 @@ Attaching package: 'boot'</code></pre>
 <p>Here, we use full matching to keep all observations in our small dataset while ensuring that each observation finds the closest comparable counterpart.</p>
 <p>To do that, we first create a matched sample.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 0: define formula for predicting gender</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>formula_ipw <span class="ot">=</span> <span class="st">'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Run the full-matching algorithm</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>match <span class="ot">=</span> <span class="fu">matchit</span>(<span class="fu">as.formula</span>(formula_ipw), </span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">'full'</span>, </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_clean,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">distance =</span> <span class="st">'glm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 0: define formula for predicting gender</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>formula_ipw <span class="ot">=</span> <span class="st">'Gender_fac ~ Age + PerfEval + Education + Seniority + Dept + JobTitle'</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Run the full-matching algorithm</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>match <span class="ot">=</span> <span class="fu">matchit</span>(<span class="fu">as.formula</span>(formula_ipw), </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">'full'</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> df_clean,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">distance =</span> <span class="st">'glm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then, we evaluate the similarity between the samples by looking at the standardized mean differences for each covariate between men and women. A well-balanced sample would reasult in mean differences close to 0.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking balance after cem matching</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(match, <span class="at">un =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking balance after cem matching</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(match, <span class="at">un =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
+<pre><code>Call:
 matchit(formula = as.formula(formula_ipw), data = df_clean, method = "full", 
     distance = "glm")
 
@@ -364,23 +321,23 @@ Discarded        0.         0</code></pre>
 <p>As we can see, men and women are not fully comparable across all characteristics. For instance, we observe a negative and positive mean difference between men and women in the Administration Department and Sales Department, respectively.</p>
 <p>Finally, we calculate the Adjusted GPG on this matched sample using a simple regression model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df_out <span class="ot">=</span> <span class="fu">match.data</span>(match)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Estimate the Treatment Effect with Weights obtained from matching</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>mod_matched <span class="ot">&lt;-</span> <span class="fu">lm</span>(BasePay_log <span class="sc">~</span> Age <span class="sc">+</span> PerfEval <span class="sc">+</span> Education <span class="sc">+</span> Seniority <span class="sc">+</span> Dept <span class="sc">+</span> JobTitle <span class="sc">+</span> Gender_fac, <span class="at">data =</span> df_out, <span class="at">weights =</span> weights)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Convert the Effect from Log Wage to Percentage</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the coefficient for female</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>female_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_matched)[<span class="st">"Gender_fac"</span>]</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>AGPG_MLM <span class="ot">&lt;-</span> <span class="fu">round</span>((<span class="fu">exp</span>(female_coef) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>,<span class="dv">2</span>)</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"AGPG based on matched regression:"</span>, AGPG_MLM, <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_out <span class="ot">=</span> <span class="fu">match.data</span>(match)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Estimate the Treatment Effect with Weights obtained from matching</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>mod_matched <span class="ot">&lt;-</span> <span class="fu">lm</span>(BasePay_log <span class="sc">~</span> Age <span class="sc">+</span> PerfEval <span class="sc">+</span> Education <span class="sc">+</span> Seniority <span class="sc">+</span> Dept <span class="sc">+</span> JobTitle <span class="sc">+</span> Gender_fac, <span class="at">data =</span> df_out, <span class="at">weights =</span> weights)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Convert the Effect from Log Wage to Percentage</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the coefficient for female</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>female_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_matched)[<span class="st">"Gender_fac"</span>]</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>AGPG_MLM <span class="ot">&lt;-</span> <span class="fu">round</span>((<span class="fu">exp</span>(female_coef) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"AGPG based on matched regression:"</span>, AGPG_MLM, <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>AGPG based on matched regression: -2.29 %</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Create CIs for matching</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ci_mlm <span class="ot">=</span> (<span class="fu">exp</span>(<span class="fu">confint</span>(mod_matched)[<span class="dv">21</span>,])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Create CIs for matching</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ci_mlm <span class="ot">=</span> (<span class="fu">exp</span>(<span class="fu">confint</span>(mod_matched)[<span class="dv">21</span>,])<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The matched approach results in an AGPG of -2.29%. This suggests that when controlling for comparable characteristics, women earn 2.29% less than men on average. Matching mitigates bias from non-comparable characteristics, offering an improved comparison between genders.</p>
 </section>
@@ -388,31 +345,31 @@ Discarded        0.         0</code></pre>
 <h2 class="anchored" data-anchor-id="comparing-the-results">Comparing the results</h2>
 <p>Last but not least, one aspect often underlooked is that of confidence around the AGPG estimates. While it may be appealing for companies to report only point estimates, it should be essential to consider the statistical significance of these estimates in addition to the practical significance. That is, how certain can we be that the estimated AGPG actually differs from 0 (i.e., no gender pay gap)?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example estimates and 95% CIs for each method</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>methods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Linear Regression"</span>, <span class="st">"Matching"</span>, <span class="st">"Oaxaca-Blinder"</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">c</span>(AGPGLM, AGPG_MLM, AGPGOB)  <span class="co"># replace these with actual estimates</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>ci_lowers <span class="ot">&lt;-</span> <span class="fu">c</span>(ci_lm[<span class="dv">1</span>], ci_mlm[<span class="dv">1</span>], ci_ob[<span class="dv">1</span>])  <span class="co"># replace with actual lower CIs</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>ci_uppers <span class="ot">&lt;-</span> <span class="fu">c</span>(ci_lm[<span class="dv">2</span>], ci_mlm[<span class="dv">2</span>], ci_ob[<span class="dv">2</span>])  <span class="co"># replace with actual upper CIs</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a data frame</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Method =</span> methods, <span class="at">Estimate =</span> estimates, <span class="at">CI_Lower =</span> ci_lowers, <span class="at">CI_Upper =</span> ci_uppers)</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load ggplot2 for plotting</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Method, <span class="at">y =</span> Estimate)) <span class="sc">+</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span>  <span class="co"># Plot the point estimates</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> CI_Lower, <span class="at">ymax =</span> CI_Upper), <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span> <span class="co"># CI error bars</span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gender Pay Gap Estimates by Method with 95% Confidence Intervals"</span>,</span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Method"</span>, <span class="at">y =</span> <span class="st">"Gender Pay Gap Estimate (%)"</span>) <span class="sc">+</span></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),  <span class="co"># Remove x-axis grid lines</span></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span>  <span class="co"># Add a zero line for reference</span></span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example estimates and 95% CIs for each method</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>methods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Linear Regression"</span>, <span class="st">"Matching"</span>, <span class="st">"Oaxaca-Blinder"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">c</span>(AGPGLM, AGPG_MLM, AGPGOB)  <span class="co"># replace these with actual estimates</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ci_lowers <span class="ot">&lt;-</span> <span class="fu">c</span>(ci_lm[<span class="dv">1</span>], ci_mlm[<span class="dv">1</span>], ci_ob[<span class="dv">1</span>])  <span class="co"># replace with actual lower CIs</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>ci_uppers <span class="ot">&lt;-</span> <span class="fu">c</span>(ci_lm[<span class="dv">2</span>], ci_mlm[<span class="dv">2</span>], ci_ob[<span class="dv">2</span>])  <span class="co"># replace with actual upper CIs</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a data frame</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Method =</span> methods, <span class="at">Estimate =</span> estimates, <span class="at">CI_Lower =</span> ci_lowers, <span class="at">CI_Upper =</span> ci_uppers)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load ggplot2 for plotting</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Method, <span class="at">y =</span> Estimate)) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span>  <span class="co"># Plot the point estimates</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> CI_Lower, <span class="at">ymax =</span> CI_Upper), <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span> <span class="co"># CI error bars</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gender Pay Gap Estimates by Method with 95% Confidence Intervals"</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Method"</span>, <span class="at">y =</span> <span class="st">"Gender Pay Gap Estimate (%)"</span>) <span class="sc">+</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),  <span class="co"># Remove x-axis grid lines</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)<span class="sc">+</span>  <span class="co"># Add a zero line for reference</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GPG_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="GPG_files/figure-markdown/unnamed-chunk-9-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>In the plot above we show the AGPG estimates and their confidence intervals for each method. Note that only for Oaxaca-Blinder<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and linear regression after matching, we would conclude that the adjusted gender pay gap is statistically significant.</p>
