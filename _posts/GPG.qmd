@@ -8,6 +8,19 @@ execute:
   warning: false
   message: true
   echo: true
+
+#For editing
+#title: "Gender Pay Gap Methods"
+#format: 
+#  html:
+#    code-fold: true
+#    code-summary: "Show the code"
+#execute: 
+#  warning: false
+#  message: true
+#  echo: true
+##context: setup
+
 ---
 
 # The Push for Pay Transparency
