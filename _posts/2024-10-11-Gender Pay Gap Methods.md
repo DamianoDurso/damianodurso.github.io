@@ -73,10 +73,6 @@ head(df) ; nrow(df)
 ```
 
 
-::: {.cell-output .cell-output-stdout}
-    [1] 1000
-:::
-:::
 
 ## Data Exploration
 
@@ -85,7 +81,7 @@ characteristics such as age, performance, seniority, and education
 across genders. This initial exploration can reveal structural
 differences between groups and highlight areas that may need adjustment.
 
-```{r, echo = FALSE}
+```r
 #| fig-width: 12
 #| fig-height: 10
 # Load necessary libraries
@@ -125,19 +121,16 @@ the definition above which is $$
 \text{UGPG} = \frac{\text{Avg. male earnings} - \text{Avg. female earnings}}{\text{Avg. male earnings}} \times 100\%
 $$
 
-::: cell
-``` {.r .cell-code}
+
+```r
 avg_pay_men = mean(df[df['Gender'] == 'Male', 'BasePay'])
 avg_pay_women = mean(df[df['Gender'] == 'Female', 'BasePay'])
 GPG = round(((avg_pay_men-avg_pay_women)/avg_pay_men)*100,2)
 
-paste0("The Unadjusted Gender Pay Gap is = ", GPG, "%")
+paste0("The Unadjusted Gender Pay Gap is = ", GPG, '')
+
 ```
 
-::: {.cell-output .cell-output-stdout}
-    [1] "The Unadjusted Gender Pay Gap is = 8.65%"
-:::
-:::
 
 the UGPG here is -8.65%, meaning women earn 8.65% less than men, on
 average. However, this simple metric doesn't account for other
