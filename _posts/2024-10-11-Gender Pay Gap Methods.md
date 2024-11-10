@@ -67,7 +67,7 @@ This dataset includes 1,000 records of individual salaries, bonuses, job
 titles, and other attributes relevant to compensation.
 
 
-``` {.r .cell-code}
+```r
 df = read.csv("Glassdoor Gender Pay Gap.csv")
 head(df) ; nrow(df)
 ```
